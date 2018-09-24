@@ -1,29 +1,24 @@
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include "master.h"
 
-int main(int argc, char **argv) {
-	char *routeOfFileToRead = "./carrera.txt";
-	FILE *filePointer = fileToRead(routeOfFileToRead);
+int main(int argc, char **argv){
+	pid_t master;
+	int status = 0;
+	master = fork();
 
-	char* actualLine = NULL;
-	size_t lineSize = 0;
-	ssize_t charsInTheLine;
-	/*char *routeOfFileToRead = getenv("HOLIS");
+	if (master == -1)
+		exit(EXIT_FAILURE);
 
-	if (routeOfFileToRead == NULL)
-		routeOfFileToRead = "./carrera.txt";
+	else if (master == 0)
+		createHorses();
 
+	else
+		master = wait(&status);
 
-	while ( (charsInTheLine = getline(&actualLine,&lineSize,filePointer) ) != -1){
-		printf("Caracteres en la línea: %zu: \n",charsInTheLine);
-		printf("%s",actualLine);
-	}
+	return 0;
 
-	fclose(filePointer);*/
-
-	createHorse();
 }

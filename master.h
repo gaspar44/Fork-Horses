@@ -4,5 +4,6 @@
 
 int getNumberOfProcessess();
 FILE* fileToRead(char *routeToTheFile);
-void createHorse();
+void createHorses();
+char* getLine(FILE * fileToGetLine,int numberOfLineToRead);
 #endif

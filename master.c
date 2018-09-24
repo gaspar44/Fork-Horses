@@ -4,33 +4,30 @@
  *  Created on: 23 sept. 2018
  *      Author: gaspar
  */
-
+#define _GNU_SOURCE
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include "master.h"
+#include "horse.h"
 
 
 int getNumberOfProcessess(){
 	srand(time(NULL));
-	int numberOfProccessesToCreate = rand() % 11;
+	int numberOfProcessesToCreate = rand() % 11;
 
-		if (numberOfProccessesToCreate >= 4)
-			return numberOfProccessesToCreate;
+		if (numberOfProcessesToCreate >= 4)
+			return numberOfProcessesToCreate;
 
 		else
-			return numberOfProccessesToCreate + 4;
+			return numberOfProcessesToCreate + 4;
 }
 
 FILE* fileToRead(char* routeToFile){
-
-	/* Según documentación, en el caso dado de que actualLine sea nula y el size_t 0, por dentro
-	   Asocia el malloc adecuado*/
-
 	FILE * filePointer;
-
 	filePointer = fopen(routeToFile,"r");
 
 	if (filePointer == NULL)
@@ -40,36 +37,51 @@ FILE* fileToRead(char* routeToFile){
 
 }
 
-void createHorse(){
+void createHorses(){
 	int PID = getpid();
+	const int NUMBER_OF_PROCESSES = getNumberOfProcessess();
 	printf("aún no se ha creado el fork. Soy: %d\n",PID);
-	pid_t createdProccesses[4];
-	pid_t createdProccess;
+	pid_t createdProcesses[NUMBER_OF_PROCESSES];
+	pid_t createdProcess,wpid;
+	int status = 0;
 
-	for (int i = 0 ; i < 4;i++){
+	for (int i = 0 ; i < NUMBER_OF_PROCESSES;i++){
 
 		if ( PID == getpid()) {
-			createdProccess = fork();
-			if (createdProccess < 0)
+			char* line = getLine(fileToRead("./carrera.txt"),i);
+			createdProcess = fork();
+			if (createdProcess < 0)
 				exit(1);
 
-			else if (createdProccess == 0){
+			else if (createdProcess == 0){
 				printf("soy el proceso hijo: %d\n",getpid());
+				startRaceHorce(line);
 				exit(0);
 			}
 
 			else
-				createdProccesses[i] = createdProccess;
+				createdProcesses[i] = createdProcess;
 		}
 
-
-
-			/*else
-				printf("soy el proceso hijo: %d %d\n",getpid(),getppid());*/
-
 	}
+	while ((wpid = wait(&status)) > 0);
 
-	sleep(5);
-	for (int i =0; i < 4 ;i++)
-		printf("%d\n",createdProccesses[i]);
+	for (int i = 0; i < NUMBER_OF_PROCESSES ;i++)
+		printf("%d\n",createdProcesses[i]);
 }
+
+char* getLine(FILE * fileToGetLine,int numberOfLineToRead){
+	/* Según documentación, en el caso dado de que actualLine sea nula y el size_t 0, por dentro
+	   Asocia el malloc adecuado*/
+		char* actualLine = NULL;
+		int startLine = 1;
+		size_t lineSize = 0;
+		ssize_t charsInTheLine;
+
+		while ( (charsInTheLine = getline(&actualLine,&lineSize,fileToGetLine) ) != -1 && (startLine != numberOfLineToRead))
+			startLine++;
+
+		fclose(fileToGetLine);
+		return actualLine;
+}
+
