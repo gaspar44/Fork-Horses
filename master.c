@@ -44,6 +44,7 @@ void createHorses(){
 	pid_t createdProcesses[NUMBER_OF_PROCESSES];
 	pid_t createdProcess,wpid;
 	int status = 0;
+	int horsesPipeLines[NUMBER_OF_PROCESSES][2];
 
 	for (int i = 0 ; i < NUMBER_OF_PROCESSES;i++){
 
@@ -55,7 +56,7 @@ void createHorses(){
 
 			else if (createdProcess == 0){
 				printf("soy el proceso hijo: %d\n",getpid());
-				startRaceHorce(line);
+				startRaceHorse(line,i);
 				exit(0);
 			}
 

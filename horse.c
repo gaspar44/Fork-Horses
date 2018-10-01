@@ -22,7 +22,7 @@ int getRaceTime() {
 			return raceTime + 30;
 }
 
-void startRaceHorce(char* horseRiderData ){
+void startRaceHorse(char* horseRiderData,int numberOfHorse ){
 	printf("soy: %s\n",horseRiderData);
 
 }
