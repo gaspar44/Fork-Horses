@@ -8,11 +8,13 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <time.h>
 #include "horse.h"
+#include <string.h>
 
 int getRaceTime() {
-	srand(time(NULL));
+	srand(time(NULL) ^ getpid());
 	int raceTime = rand() % 60;
 
 		if (raceTime >= 30)
@@ -22,7 +24,20 @@ int getRaceTime() {
 			return raceTime + 30;
 }
 
-void startRaceHorse(char* horseRiderData,int numberOfHorse ){
-	printf("soy: %s\n",horseRiderData);
+char* startRaceHorse(char* horseRiderData,int numberOfHorse ){
+	int horseRaceTime = getRaceTime();
+	char stringedHorseRaceTime[100];
+	char* result = 0;
+
+	sprintf(stringedHorseRaceTime,"%d",horseRaceTime);
+	sleep(horseRaceTime);
+
+	result = malloc(strlen(horseRiderData) + strlen(stringedHorseRaceTime) + 5);
+	strcpy(result,horseRiderData);
+	strtok(result,"\n");
+	strcat(result,";");
+	strcat(result,stringedHorseRaceTime);
+	strcat(result,"\n");
+	return result;
 
 }

@@ -11,13 +11,14 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <string.h>
 #include "master.h"
 #include "horse.h"
 
 
 int getNumberOfProcessess(){
 	srand(time(NULL));
-	int numberOfProcessesToCreate = rand() % 11;
+	int numberOfProcessesToCreate = (rand() % 10) + 1;
 
 		if (numberOfProcessesToCreate >= 4)
 			return numberOfProcessesToCreate;
@@ -41,7 +42,7 @@ void createHorses(){
 	int PID = getpid();
 	const int NUMBER_OF_PROCESSES = getNumberOfProcessess();
 	printf("aún no se ha creado el fork. Soy: %d\n",PID);
-	pid_t createdProcesses[NUMBER_OF_PROCESSES];
+	int createdProcesses[NUMBER_OF_PROCESSES];
 	pid_t createdProcess,wpid;
 	int status = 0;
 	int horsesPipeLines[NUMBER_OF_PROCESSES][2];
@@ -50,18 +51,25 @@ void createHorses(){
 
 		if ( PID == getpid()) {
 			char* line = getLine(fileToRead("./carrera.txt"),i);
+			pipe(horsesPipeLines[i]);
+
 			createdProcess = fork();
 			if (createdProcess < 0)
 				exit(1);
 
 			else if (createdProcess == 0){
+				close(horsesPipeLines[i][0]);  // Se cierra el de lectura
 				printf("soy el proceso hijo: %d\n",getpid());
-				startRaceHorse(line,i);
+				char * horseResult = startRaceHorse(line,i);
+				write(horsesPipeLines[i][0],horseResult,strlen(horseResult) + 1);
 				exit(0);
 			}
 
-			else
+			else{
+				close(horsesPipeLines[i][1]);  // Se cierra el pipe de escritura
 				createdProcesses[i] = createdProcess;
+			}
+
 		}
 
 	}
@@ -69,6 +77,8 @@ void createHorses(){
 
 	for (int i = 0; i < NUMBER_OF_PROCESSES ;i++)
 		printf("%d\n",createdProcesses[i]);
+
+
 }
 
 char* getLine(FILE * fileToGetLine,int numberOfLineToRead){

@@ -8,7 +8,7 @@
 #ifndef HORSE_H_
 #define HORSE_H_
 #include <stdio.h>
-void startRaceHorse(char* horseRiderData,int numberOfHorse);
+ char* startRaceHorse(char* horseRiderData,int numberOfHorse);
 int getRaceTime();
 
 #endif /* HORSE_H_ */
