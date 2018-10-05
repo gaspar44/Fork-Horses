@@ -27,7 +27,7 @@ int getRaceTime() {
 char* startRaceHorse(char* horseRiderData,int numberOfHorse ){
 	int horseRaceTime = getRaceTime();
 	char stringedHorseRaceTime[100];
-	char* result = 0;
+	char* result = NULL;
 
 	sprintf(stringedHorseRaceTime,"%d",horseRaceTime);
 	sleep(horseRaceTime);
