@@ -8,4 +8,4 @@ all: main.o master.o horse.o puntuacion.o
 	$(GCC) -o main main.o master.o horse.o puntuacion.o
 	
 clean:
-	rm *.o main
+	rm *.o main puntuacion.txt

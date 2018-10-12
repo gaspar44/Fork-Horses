@@ -46,30 +46,27 @@ void createHorses(){
 	const int NUMBER_OF_PROCESSES = getNumberOfProcessess();
 	printf("aún no se ha creado el fork. Soy: %d\n",PID);
 	pid_t createdProcesses[NUMBER_OF_PROCESSES];
-	pid_t createdProcess,wpid;
-	int status = 0;
-	//int horsesPipeLines[NUMBER_OF_PROCESSES][2];
-
+	pid_t createdProcess;
+	int status;
 
 	for (int i = 0 ; i < NUMBER_OF_PROCESSES;i++){
 
 		if ( PID == getpid()) {
 			char* line = getLine(fileToRead("./carrera.txt"),i);
-			//pipe(horsesPipeLines[i]);
-
 			createdProcess = fork();
+
 			if (createdProcess < 0)
-				exit(1);
+				exit(EXIT_FAILURE);
 
 			else if (createdProcess == 0){
 				int pointsStatus;
 				pid_t point;
-				//close(horsesPipeLines[i][0]);  // Se cierra el de lectura
-				printf("soy el proceso hijo: %d\n",getpid());
-				char * horseResult = startRaceHorse(line,i);
-				//write(horsesPipeLines[i][1],horseResult,strlen(horseResult) + 1);
 
-				if ((point = fork()) == -1)
+				printf("soy el proceso hijo: %d\n",getpid());
+
+				char * horseResult = startRaceHorse(line,i);
+
+				if ( (point = fork() ) == -1)
 					exit(EXIT_FAILURE);
 
 				else if(point == 0)
@@ -78,13 +75,11 @@ void createHorses(){
 				else
 					wait(&pointsStatus);
 
-				exit(0);
+				exit(EXIT_SUCCESS);
 			}
 
-			else{
-				//close(horsesPipeLines[i][1]);  // Se cierra el pipe de escritura
+			else
 				createdProcesses[i] = createdProcess;
-			}
 
 		}
 
@@ -93,8 +88,8 @@ void createHorses(){
 	for (int i = 0; i < NUMBER_OF_PROCESSES ;i++)
 		waitpid(createdProcesses[i],&status,0);
 
-	/*for (int i = 0; i < NUMBER_OF_PROCESSES;i++)
-		printf("ejemplo %s",horsesPipeLines[i][0]);*/
+	exit(EXIT_SUCCESS);
+
 }
 
 char* getLine(FILE * fileToGetLine,int numberOfLineToRead){
