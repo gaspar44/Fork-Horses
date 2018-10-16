@@ -20,8 +20,7 @@ int getRaceTime() {
 		if (raceTime >= 30)
 			return raceTime;
 
-		else
-			return raceTime + 30;
+		return raceTime + 30;
 }
 
 char* startRaceHorse(char* horseRiderData,int numberOfHorse ){
