@@ -26,8 +26,7 @@ int getNumberOfProcessess(){
 		if (numberOfProcessesToCreate >= 4)
 			return numberOfProcessesToCreate;
 
-		else
-			return numberOfProcessesToCreate + 4;
+		return numberOfProcessesToCreate + 4;
 }
 
 FILE* fileToRead(char* routeToFile){
