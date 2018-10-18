@@ -30,7 +30,7 @@ char* startRaceHorse(char* horseRiderData,int numberOfHorse ){
 	char* result = NULL;
 
 	sprintf(stringedHorseRaceTime,"%d",horseRaceTime);
-	//sleep(horseRaceTime);
+	sleep(horseRaceTime);
 
 	result = malloc(strlen(horseRiderData) + strlen(stringedHorseRaceTime) + 5);
 	strcpy(result,horseRiderData);
