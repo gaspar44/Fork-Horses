@@ -20,7 +20,7 @@ void writeResults(char* horseResult){
 	if ( dup(raceResult) == -1)
 		exit(EXIT_FAILURE);
 
-
-	write(1,horseResult, strlen(horseResult) + 1);
+	close(raceResult);
+	printf("%s",horseResult);
 	exit(EXIT_SUCCESS);
 }
