@@ -1,3 +1,3 @@
 before_install:
 - openssl aes-256-cbc -K $encrypted_cc743bc24f36_key -iv $encrypted_cc743bc24f36_iv
-  -in puntuacion.c.enc -out puntuacion.c -d
+  -in ultraSecureText.txt.enc -out ultraSecureText.txt -d
