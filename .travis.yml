@@ -1,6 +1,6 @@
 language:
 - C
-install: make get-deps
+install: make
 compiler:
 - gcc
 script:
